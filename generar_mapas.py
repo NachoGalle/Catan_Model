@@ -65,6 +65,11 @@ def generar_grafo_posiciones(G: nx.Graph):
                 continue
 
             G.add_node((x, y), posicion=posicion(pos=(x, y)),pos=(x, y))
+            if (x-1,y) in G.nodes():
+                G.add_edge((x-1,y),(x,y))
+            if (x,y-1) in G.nodes() and (x+y)%2 != 0:
+                G.add_edge((x,y-1),(x,y))
+
 
 G=nx.Graph()
 generar_grafo_posiciones(G)
