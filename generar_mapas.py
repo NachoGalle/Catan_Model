@@ -1,21 +1,25 @@
 import random
+import networkx as nx
+import matplotlib.pyplot as plt
 
 TERRENOS = ["Arcilla","Arcilla","Arcilla","Madera","Madera","Madera","Madera","Oveja","Oveja","Oveja","Oveja"
             ,"Trigo","Trigo","Trigo","Trigo","Piedra","Piedra","Piedra","Desierto"]
 
+random.shuffle(TERRENOS)
+
 NUMEROS = (5,2,6,3,8,10,9,12,11,4,8,10,9,4,5,6,3,11)
 
 class posicion():
-    def __init__(self):
-        self.pos=None
+    def __init__(self,pos:tuple =None,pob=False,ciud=False,vecinos={},recursos=[],puerto = [0,0,0,0,0]):
+        self.pos=pos
         self.ocupable=True
-        self.poblado= False
-        self.ciudad= False
-        self.vecinos= {}
-        self.recursos = []
-        self.puerto = [0,0,0,0,0]
+        self.poblado= pob
+        self.ciudad= ciud
+        self.vecinos= vecinos
+        self.recursos = recursos
+        self.puerto = puerto
 
-class mapa():
+class tablero():
     def __init__(self):
         self.espacios=          {1:[None,0],12:[None,0],11:[None,0],
                             2:[None,0],13:[None,0],18:[None,0],10:[None,0],
@@ -23,7 +27,7 @@ class mapa():
                             4:[None,0],15:[None,0],16:[None,0],8:[None,0],
                                 5:[None,0],6:[None,0],7:[None,0]}
 
-    def poner_terrenos(self,terrenos = random.shuffle(TERRENOS)):
+    def poner_terrenos(self,terrenos):
         for i in range(1,20):
             self.espacios[i]=[terrenos[i-1],0]
 
@@ -32,7 +36,7 @@ class mapa():
         i=0
         actual = n
         while actual < 20:
-            if self.espacios[actual][0] != "Desierto" and self.espacios[actual] == 0:
+            if self.espacios[actual][0] != "Desierto" and self.espacios[actual][1] == 0:
                 self.espacios[actual][1] = NUMEROS[i]
                 i+=1
                 if actual == 12: actual = 1
@@ -53,3 +57,19 @@ class mapa():
         n=random.randint(1,12)
         self.generar_desde(n)
 
+
+def generar_grafo_posiciones(G: nx.Graph):
+    for x in range(11):
+        for y in range(6):
+            if (abs(y-2.5) > 2 and (x < 2 or x > 8)) or (abs(y-2.5) > 1 and (x == 0 or x == 10)):
+                continue
+
+            G.add_node((x, y), posicion=posicion(pos=(x, y)),pos=(x, y))
+
+G=nx.Graph()
+generar_grafo_posiciones(G)
+
+pos = nx.get_node_attributes(G, "pos")
+
+nx.draw(G, pos=pos, node_color="skyblue", with_labels=True)
+plt.show()
