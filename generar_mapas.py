@@ -5,19 +5,33 @@ import matplotlib.pyplot as plt
 TERRENOS = ["Arcilla","Arcilla","Arcilla","Madera","Madera","Madera","Madera","Oveja","Oveja","Oveja","Oveja"
             ,"Trigo","Trigo","Trigo","Trigo","Piedra","Piedra","Piedra","Desierto"]
 
-random.shuffle(TERRENOS)
+terrenos = TERRENOS.copy()
+random.shuffle(terrenos)
 
 NUMEROS = (5,2,6,3,8,10,9,12,11,4,8,10,9,4,5,6,3,11)
 
 class posicion():
-    def __init__(self,pos:tuple =None,pob=False,ciud=False,vecinos={},recursos=[],puerto = [0,0,0,0,0]):
-        self.pos=pos
+    def __init__(self,loc:tuple =None,pob:bool=False,ciud: bool=False,vecinos: dict={},recursos: list=[],puerto: list = [0,0,0,0,0]):
+        self.loc=loc
         self.ocupable=True
         self.poblado= pob
         self.ciudad= ciud
         self.vecinos= vecinos
         self.recursos = recursos
         self.puerto = puerto
+        self.atributos = {"loc": loc, "ocupable": self.ocupable, "poblado": pob, "ciudad": ciud , "vecinos" : self.vecinos}
+
+    def add_recurso(self,recurso: tuple):
+        self.recursos.append(recurso)
+
+    def __eq__(self, other):
+        if not isinstance(other, posicion):
+            return False
+        return self.loc == other.loc
+
+    def __hash__(self):
+        return hash(self.loc)
+
 
 class tablero():
     def __init__(self):
@@ -27,7 +41,7 @@ class tablero():
                             4:[None,0],15:[None,0],16:[None,0],8:[None,0],
                                 5:[None,0],6:[None,0],7:[None,0]}
 
-    def poner_terrenos(self,terrenos):
+    def poner_terrenos(self,terrenos= terrenos):
         for i in range(1,20):
             self.espacios[i]=[terrenos[i-1],0]
 
@@ -57,6 +71,8 @@ class tablero():
         n=random.randint(1,12)
         self.generar_desde(n)
 
+def n_prob(n: int) -> float:
+    return (6-abs(n-7))/36
 
 def generar_grafo_posiciones(G: nx.Graph):
     for x in range(11):
@@ -64,7 +80,7 @@ def generar_grafo_posiciones(G: nx.Graph):
             if (abs(y-2.5) > 2 and (x < 2 or x > 8)) or (abs(y-2.5) > 1 and (x == 0 or x == 10)):
                 continue
 
-            G.add_node((x, y), posicion=posicion(pos=(x, y)),pos=(x, y))
+            G.add_node((x, y), posicion=posicion(loc=(x, y)),pos=(x, y)) #revisar parámetros de add_node tal vez sea mejor que la posición sea el nodo y no que sea un atributo del nodo#
             if (x-1,y) in G.nodes():
                 G.add_edge((x-1,y),(x,y))
             if (x,y-1) in G.nodes() and (x+y)%2 != 0:
@@ -74,7 +90,25 @@ def generar_grafo_posiciones(G: nx.Graph):
 G=nx.Graph()
 generar_grafo_posiciones(G)
 
-pos = nx.get_node_attributes(G, "pos")
+def cargar_tablero(G: nx.Graph,Tablero: tablero):
+    for i in [(2,0),(3,0),(4,0),(2,1),(3,1),(4,1)]:
+        nodo = G.nodes[i]["posicion"]
+        recurso = Tablero.espacios[5]
+        nodo.add_recurso(recurso)
 
-nx.draw(G, pos=pos, node_color="skyblue", with_labels=True)
+
+tab = tablero()
+tab.poner_terrenos(TERRENOS)
+tab.generar_random()
+
+print(tab.espacios)
+
+cargar_tablero(G,tab)
+print(len(G.nodes[2,0]["posicion"].recursos))
+
+for i in [(2,0),(3,0),(4,0),(2,1),(3,1),(4,1)]:
+    print(str(G.nodes[i]) + "recs" + str(G.nodes[i]["posicion"].recursos))
+
+nx.draw(G,pos, node_color="skyblue", with_labels=True)
 plt.show()
+print(list(G.nodes(data="posicion")))
