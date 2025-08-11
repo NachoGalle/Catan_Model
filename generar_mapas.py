@@ -96,25 +96,78 @@ G=nx.Graph()
 generar_grafo_posiciones(G)
 
 def cargar_tablero(G: nx.Graph,Tablero: tablero):
-    for i in [(2,0),(3,0),(4,0),(2,1),(3,1),(4,1)]:
+    for i in [(2,0),(3,0),(4,0),(2,1),(3,1),(4,1)]:   ##asignar hexagono 5
         recurso = Tablero.espacios[5]
         G.nodes[i]["posicion"].add_recurso(recurso)
-
+    for i in [(4,0),(4,1),(5,0),(5,1),(6,0),(6,1)]:   ##asignar hexagono 6
+        recurso = Tablero.espacios[6]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(7,0),(7,1),(8,0),(8,1),(6,0),(6,1)]:   ##asignar hexagono 7
+        recurso = Tablero.espacios[7]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(1,1),(2,1),(3,1),(1,2),(2,2),(3,2)]:   ##asignar hexagono 4
+        recurso = Tablero.espacios[4]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(5,1),(4,1),(3,1),(5,2),(4,2),(3,2)]:   ##asignar hexagono 15
+        recurso = Tablero.espacios[15]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(5,1),(6,1),(7,1),(5,2),(6,2),(7,2)]:   ##asignar hexagono 16
+        recurso = Tablero.espacios[16]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(9,1),(8,1),(7,1),(9,2),(8,2),(7,2)]:   ##asignar hexagono 8
+        recurso = Tablero.espacios[8]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(0,3),(1,3),(2,3),(0,2),(1,2),(2,2)]:   ##asignar hexagono 3
+        recurso = Tablero.espacios[3]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(4,3),(3,3),(2,3),(4,2),(3,2),(2,2)]:   ##asignar hexagono 14
+        recurso = Tablero.espacios[14]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(4,3),(5,3),(6,3),(4,2),(5,2),(6,2)]:   ##asignar hexagono 19
+        recurso = Tablero.espacios[19]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(8,3),(7,3),(6,3),(8,2),(7,2),(6,2)]:   ##asignar hexagono 17
+        recurso = Tablero.espacios[17]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(8,3),(9,3),(10,3),(8,2),(9,2),(10,2)]:   ##asignar hexagono 9
+        recurso = Tablero.espacios[9]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(1,3),(2,3),(3,3),(1,4),(2,4),(3,4)]:   ##asignar hexagono 2
+        recurso = Tablero.espacios[2]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(5,3),(4,3),(3,3),(5,4),(4,4),(3,4)]:   ##asignar hexagono 13
+        recurso = Tablero.espacios[13]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(5,3),(6,3),(7,3),(5,4),(6,4),(7,4)]:   ##asignar hexagono 18
+        recurso = Tablero.espacios[18]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(9,3),(8,3),(7,3),(9,4),(8,4),(7,4)]:   ##asignar hexagono 10
+        recurso = Tablero.espacios[10]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(4,5),(3,5),(2,5),(4,4),(3,4),(2,4)]:   ##asignar hexagono 1
+        recurso = Tablero.espacios[1]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(4,5),(5,5),(6,5),(4,4),(5,4),(6,4)]:   ##asignar hexagono 12
+        recurso = Tablero.espacios[12]
+        G.nodes[i]["posicion"].add_recurso(recurso)
+    for i in [(8,5),(7,5),(6,5),(8,4),(7,4),(6,4)]:   ##asignar hexagono 11
+        recurso = Tablero.espacios[11]
+        G.nodes[i]["posicion"].add_recurso(recurso)
 
 tab = tablero()
-tab.poner_terrenos(TERRENOS)
+tab.poner_terrenos()
 tab.generar_random()
 
 print(tab.espacios)
 
 cargar_tablero(G,tab)
-print(len(G.nodes[2,0]["posicion"].recursos))
 
-for i in [(2,0),(3,0),(4,0),(2,1),(3,1),(4,1)]:
-    print(str(G.nodes[i]) + "recs" + str(G.nodes[i]["posicion"].recursos))
 
 pos = nx.get_node_attributes(G, "pos")
-nx.draw(G, pos=pos, node_color="skyblue")
-plt.show()
+#nx.draw(G, pos=pos, node_color="skyblue")
+#plt.show()
 
-print(list(G.nodes(data="posicion")))
+#print(list(G.nodes(data="posicion")))
+
+for i in G.nodes:
+    print(G.nodes[i]["pos"],",",G.nodes[i]["posicion"].recursos)
